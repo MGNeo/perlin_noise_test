@@ -24,14 +24,10 @@ public:
 		{
 			for (size_t point_y = 0; point_y < POINT_COUNT; ++point_y)
 			{
-				/*const float angle_grad = rand() % 360U;
+				const float angle_grad = rand() % 360U;
 				const float angle_rad = angle_grad * GRAD_TO_RAD_K;
 				points[point_x][point_y].x = cos(angle_rad);
-				points[point_x][point_y].y = sin(angle_rad);*/
-				
-				points[point_x][point_y].x = rand() % 3 - 1;
-				points[point_x][point_y].y = rand() % 3 - 1;
-				
+				points[point_x][point_y].y = sin(angle_rad);				
 			}
 		}
 
