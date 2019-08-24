@@ -24,14 +24,14 @@ public:
 		{
 			for (size_t point_y = 0; point_y < POINT_COUNT; ++point_y)
 			{
-				const float angle_grad = rand() % 360U;
+				/*const float angle_grad = rand() % 360U;
 				const float angle_rad = angle_grad * GRAD_TO_RAD_K;
 				points[point_x][point_y].x = cos(angle_rad);
-				points[point_x][point_y].y = sin(angle_rad);
-				/*
+				points[point_x][point_y].y = sin(angle_rad);*/
+				
 				points[point_x][point_y].x = rand() % 3 - 1;
 				points[point_x][point_y].y = rand() % 3 - 1;
-				*/
+				
 			}
 		}
 
@@ -60,27 +60,20 @@ float min = 0.f;
 						Vector2f vector_to_bottom_left  = { local_x_float    , local_y_float - 1 };
 						Vector2f vector_to_bottom_right = { local_x_float - 1, local_y_float - 1 };
 
-						auto normalize = [](Vector2f &_v)
-						{
-							const float d = sqrt(pow(_v.x, 2) + pow(_v.y, 2));
-							_v.x /= d;
-							_v.y /= d;
-						};
-
-						normalize(vector_to_top_left);
-						normalize(vector_to_top_right);
-						normalize(vector_to_bottom_left);
-						normalize(vector_to_bottom_right);
-
 						const float top_left_value     = top_left_gradient.x     * vector_to_top_left.x     + top_left_gradient.y     * vector_to_top_left.y    ;
 						const float top_right_value    = top_right_gradient.x    * vector_to_top_right.x    + top_right_gradient.y    * vector_to_top_right.y   ;
 						const float bottom_left_value  = bottom_left_gradient.x  * vector_to_bottom_left.x  + bottom_left_gradient.y  * vector_to_bottom_left.y ;
 						const float bottom_right_value = bottom_right_gradient.x * vector_to_bottom_right.x + bottom_right_gradient.y * vector_to_bottom_right.y;
 
-						const float top_value    = top_left_value    + local_x_float * (top_right_value    - top_left_value   );
-						const float bottom_value = bottom_left_value + local_x_float * (bottom_right_value - bottom_left_value);
+						auto cc = [](const float _t)->float
+						{
+							return _t * _t * _t * (_t * (_t * 6 - 15) + 10);
+						};
 
-						const float value = top_value + local_y_float * (bottom_value - top_value);
+						const float top_value    = top_left_value    + cc(local_x_float) * (top_right_value    - top_left_value   );
+						const float bottom_value = bottom_left_value + cc(local_x_float) * (bottom_right_value - bottom_left_value);
+
+						const float value = top_value + cc(local_y_float) * (bottom_value - top_value);
 
 						if (value > max) max = value;
 						if (value < min) min = value;
