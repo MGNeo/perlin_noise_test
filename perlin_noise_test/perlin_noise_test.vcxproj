@@ -127,7 +127,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Mode.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Mixer.cpp" />
+    <ClCompile Include="Sample.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Mode.hpp" />
+    <ClInclude Include="Mixer.hpp" />
+    <ClInclude Include="Sample.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
