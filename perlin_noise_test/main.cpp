@@ -16,21 +16,19 @@ int main(int argc, char **argv)
 
 	Mixer mixer;
 
-	unique_ptr<Sample> sample_1 = make_unique<Sample>(6, 6);
+	unique_ptr<Sample> sample_1 = make_unique<Sample>(6, 9);
 	unique_ptr<Mode> mode_1 = make_unique<SumMode>(true, 1.f);
 	mixer.push_back(sample_1, mode_1);
 
-	unique_ptr<Sample> sample_2 = make_unique<Sample>(12, 12);
-	unique_ptr<Mode> mode_2 = make_unique<SubMode>(false, 0.9f);
+	unique_ptr<Sample> sample_2 = make_unique<Sample>(36, 22);
+	unique_ptr<Mode> mode_2 = make_unique<SubMode>(true, 0.3f);
 	mixer.push_back(sample_2, mode_2);
-
-	unique_ptr<Sample> sample_3 = make_unique<Sample>(30, 30);
-	unique_ptr<Mode> mode_3 = make_unique<SubMode>(false, 0.1f);
-	mixer.push_back(sample_3, mode_3);
 
 	// Нужна более гибкая настройка наложения и сдвигов шума по яркости.
 	// Возможно, лучше, чтобы PerlinNoise генерировал сырье в виде float[][] со значениями [0; 1].
 	// И потом смешивание производить в ручную по слоям сырья?
+
+	// Возможо, проблему решит модель: Source = BlendMode( Source , Effect(Sample) )
 
 	Texture texture = mixer.generateTexture(WINDOW_SIZE, WINDOW_SIZE);
 	Sprite sprite;

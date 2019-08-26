@@ -48,13 +48,4 @@ namespace perlin_noise
 			        const float _second) override;
 	};
 
-	class DevMode : public Mode
-	{
-	public:
-		DevMode(const bool _overflow_control,
-			    const float _alpha);
-
-		float blend(const float _first,
-			        const float _second) override;
-	};
 }

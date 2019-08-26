@@ -107,7 +107,7 @@ Texture Mixer::generateTexture(const size_t _width,
 						const float source_x = cell_x * points_per_cell_width  + point_x;
 						const float source_y = cell_y * points_per_cell_height + point_y;
 
-						source[source_x][source_y] = (*im)->blend(source[source_x][source_y], value);
+						source[source_x][source_y] = (*im)->blend(source[source_x][source_y], fabs(value / 0.9) );
 					}
 				}
 				
