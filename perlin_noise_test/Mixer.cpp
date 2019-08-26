@@ -38,8 +38,17 @@ Texture Mixer::generateTexture(const size_t _width,
 		throw invalid_argument("Mixer::generateTexture(), _height == 0");
 	}
 
-	Image image;
-	image.create(_width, _height, Color::Black);
+	// Create source.
+	unique_ptr<unique_ptr<float[]>[]> source;
+	source = make_unique<unique_ptr<float[]>[]>(_width);
+	for (size_t x = 0; x < _width; ++x)
+	{
+		source[x] = make_unique<float[]>(_height);
+		for (size_t y = 0; y < _height; ++y)
+		{
+			source[x][y] = 0.f;
+		}
+	}
 
 	// Первому сэмплу не нужен режим.
 
@@ -51,11 +60,13 @@ Texture Mixer::generateTexture(const size_t _width,
 	
 	while (is != samples.end())
 	{
-		const size_t cells_per_width = (*is)->getWidth() - 1U;
+		const size_t cells_per_width  = (*is)->getWidth()  - 1U;// Поправить проблему с кусочком неотрисовывания.
 		const size_t cells_per_height = (*is)->getHeight() - 1U;
 		
-		const size_t points_per_cell_width = _width / cells_per_width;
+		const size_t points_per_cell_width  = _width  / cells_per_width;
 		const size_t points_per_cell_height = _height / cells_per_height;
+
+		// Каждый поток может работать со своим сэмплом / пикселем.
 
 		for (size_t cell_x = 0; cell_x < cells_per_width; ++cell_x)
 		{
@@ -68,10 +79,10 @@ Texture Mixer::generateTexture(const size_t _width,
 
 				for (size_t point_x = 0; point_x < points_per_cell_width; ++point_x)
 				{
-					const float normed_point_x = point_x / (float) points_per_cell_width;
-					for (size_t point_y = 0; point_y < points_per_cell_width; ++point_y)
+					const float normed_point_x = (point_x + 0.5f) / (float) points_per_cell_width;// +0.5f?
+					for (size_t point_y = 0; point_y < points_per_cell_height; ++point_y)
 					{
-						const float normed_point_y = point_y / (float)points_per_cell_height;
+						const float normed_point_y = (point_y + 0.5f) / (float)points_per_cell_height;// +0.5f?
 
 						const Vector2f vector_to_top_left     { normed_point_x      , normed_point_y       };
 						const Vector2f vector_to_top_right    { normed_point_x - 1.f, normed_point_y       };
@@ -93,7 +104,10 @@ Texture Mixer::generateTexture(const size_t _width,
 						const float bottom_value = bottom_left_value + curve_fixer(normed_point_x) * (bottom_right_value - bottom_left_value);
 						const float value        = top_value         + curve_fixer(normed_point_y) * (bottom_value       - top_value        );
 
-						
+						const float source_x = cell_x * points_per_cell_width  + point_x;
+						const float source_y = cell_y * points_per_cell_height + point_y;
+
+						source[source_x][source_y] = (*im)->blend(source[source_x][source_y], value);
 					}
 				}
 				
@@ -103,4 +117,22 @@ Texture Mixer::generateTexture(const size_t _width,
 		++is;
 		++im;
 	}
+
+	Image image;
+	image.create(_width, _height, Color::Black);
+
+	for (size_t x = 0; x < _width; ++x)
+	{
+		for (size_t y = 0; y < _height; ++y)
+		{
+			const Uint8 brightness = 128 + 127 * source[x][y];
+			Color color { brightness, brightness, brightness, brightness };
+			image.setPixel(x, y, color);
+		}
+	}
+
+	Texture texture;
+	texture.loadFromImage(image);
+
+	return texture;
 }

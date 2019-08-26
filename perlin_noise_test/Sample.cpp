@@ -7,6 +7,9 @@ using namespace perlin_noise;
 using namespace std;
 using namespace sf;
 
+const float PI = 3.141592f;
+const float PI_2 = 2 * PI;
+
 Sample::Sample(const size_t _width,
 			   const size_t _height)
 {
@@ -45,18 +48,18 @@ void Sample::resetGrid()
 {
 	default_random_engine random_engine(time(NULL) + clock());
 
-	uniform_real_distribution<float> angle_rad_distribution(0.f, 2.f);
+	uniform_real_distribution<float> angle_rad_distribution(0.f, PI_2);
 	uniform_real_distribution<float> value_distribution(0.f, 1.f);
 
-	for (size_t w = 0; w < width; ++w)
+	for (size_t x = 0; x < width; ++x)
 	{
-		for (size_t h = 0; h < height; ++h)
+		for (size_t y = 0; y < height; ++y)
 		{
-			const float angle_grad = angle_rad_distribution(random_engine);
-			const float value = value_distribution(random_engine);
+			const float angle_rad = angle_rad_distribution(random_engine);
+			const float value = 1;// value_distribution(random_engine);
 
-			points[w][h].x = value * cos(angle_grad);
-			points[w][h].x = value * sin(angle_grad);
+			points[x][y].x = value * cos(angle_rad);
+			points[x][y].y = value * sin(angle_rad);
 		}
 	}
 }
