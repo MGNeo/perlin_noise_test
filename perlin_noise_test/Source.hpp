@@ -2,6 +2,12 @@
 
 #include <memory>
 
+extern const float MIN_SOURCE_VALUE;
+extern const float MAX_SOURCE_VALUE;
+
+extern const size_t MIN_SOURCE_WIDTH;
+extern const size_t MIN_SOURCE_HEIGHT;
+
 class Source
 {
 public:

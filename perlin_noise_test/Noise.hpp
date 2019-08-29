@@ -2,6 +2,9 @@
 
 #include <memory>
 
+extern const size_t MIN_NOISE_WIDTH;
+extern const size_t MIN_NOISE_HEIGHT;
+
 class Source;
 
 class Noise
@@ -15,10 +18,12 @@ class PerlinNoise : public Noise
 {
 public:
 	PerlinNoise(const size_t _width,
-				const size_t _height);
+				const size_t _height,
+				const bool _normed);
 
 	void resize(const size_t _width,
-				const size_t _height);
+				const size_t _height,
+				const bool _normed);
 
 	void reset();
 
@@ -26,6 +31,8 @@ public:
 private:
 	size_t width;
 	size_t height;
+
+	bool normed;
 
 	struct Vector2f
 	{

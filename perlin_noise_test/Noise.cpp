@@ -11,45 +11,43 @@ const float PI = 3.141592f;
 const float PI_2 = PI * 2.f;
 const float SQRT_2 = sqrt(2.f);
 
+const size_t MIN_NOISE_WIDTH  = 1U;
+const size_t MIN_NOISE_HEIGHT = 1U;
+
 Noise::~Noise()
 {
 }
 
 PerlinNoise::PerlinNoise(const size_t _width,
-						 const size_t _height)
+						 const size_t _height,
+						 const bool _normed)
 {
-	resize(_width, _height);
+	resize(_width, _height, _normed);
+
+	reset();
 }
 
 // Resize (and reset).
 void PerlinNoise::resize(const size_t _width,
-						 const size_t _height)
+						 const size_t _height,
+						 const bool _normed)
 {
-	if (_width <= 2U)
+	if (_width < MIN_NOISE_WIDTH)
 	{
-		throw invalid_argument("PerlinNoise::resize(), _width <= 2U");
+		throw invalid_argument("PerlinNoise::resize(), _width < MIN_NOISE_WIDTH");
 	}
 
-	if (_height <= 2U)
+	if (_height < MIN_NOISE_HEIGHT)
 	{
-		throw invalid_argument("PerlinNoise::resize(), _height <= 2U");
+		throw invalid_argument("PerlinNoise::resize(), _height < MIN_NOISE_HEIGHT");
 	}
-
-	default_random_engine dre{ static_cast<unsigned int>(time(NULL)) };
-	uniform_real_distribution<float> angle_distribution{ 0.f, PI_2 };
 
 	// Exception safety.
 	unique_ptr<unique_ptr<Vector2f[]>[]> new_points;
-	new_points = make_unique<unique_ptr<Vector2f[]>[]>(_width);
-	for (size_t x = 0; x < _width; ++x)
+	new_points = make_unique<unique_ptr<Vector2f[]>[]>(_width + 1U);
+	for (size_t x = 0; x < _width + 1U; ++x)
 	{
-		new_points[x] = make_unique<Vector2f[]>(_height);
-		for (size_t y = 0; y < _height; ++y)
-		{
-			const float angle_rad = angle_distribution(dre);
-			new_points[x][y].x = cos(angle_rad);
-			new_points[x][y].y = sin(angle_rad);
-		}
+		new_points[x] = make_unique<Vector2f[]>(_height + 1U);
 	}
 
 	points.swap(new_points);
@@ -62,38 +60,53 @@ void PerlinNoise::reset()
 	default_random_engine dre{ static_cast<unsigned int>(time(NULL)) };
 	uniform_real_distribution<float> angle_distribution{ 0.f, PI_2 };
 
-	for (size_t x = 0; x < width; ++x)
+	if (normed == true)
 	{
-		for (size_t y = 0; y < height; ++y)
+		for (size_t x = 0; x < width + 1U; ++x)
 		{
-			const float angle_rad = angle_distribution(dre);
-			points[x][y].x = cos(angle_rad);
-			points[x][y].y = sin(angle_rad);
+			for (size_t y = 0; y < height + 1U; ++y)
+			{
+				const float angle_rad = angle_distribution(dre);
+				points[x][y].x = cos(angle_rad);
+				points[x][y].y = sin(angle_rad);
+			}
+		}
+	}
+	else {
+		uniform_real_distribution<float> size_distribution{ 0.f, 1.f };
+		for (size_t x = 0; x < width + 1U; ++x)
+		{
+			for (size_t y = 0; y < height + 1U; ++y)
+			{
+				const float angle_rad = angle_distribution(dre);
+				const float size = size_distribution(dre);
+				points[x][y].x = size * cos(angle_rad);
+				points[x][y].y = size * sin(angle_rad);
+			}
 		}
 	}
 }
 
 void PerlinNoise::generate(Source &_source) const
 {
-	const size_t cw = width  - 1U;
+	const size_t cw = width;
 	const size_t pw = _source.getWidth();
 
-	if (pw <= cw)
+	if (pw < cw)
 	{
-		throw invalid_argument("PerlinNoise::generate(), pw <= cw");
+		throw invalid_argument("PerlinNoise::generate(), pw < cw");
 	}
 
-	const size_t ch = height - 1U;
+	const size_t ch = height;
 	const size_t ph = _source.getHeight();
 
-	if (ph <= ch)
+	if (ph < ch)
 	{
-		throw invalid_argument("PerlinNoise::generate(), ph <= ch");
+		throw invalid_argument("PerlinNoise::generate(), ph < ch");
 	}
 
-	const size_t pcw = static_cast<size_t>(static_cast<float>(pw) / cw/* + 0.5f*/);
-	const size_t pch = static_cast<size_t>(static_cast<float>(ph) / ch/* + 0.5f*/);
-	const size_t pcd = static_cast<size_t>(sqrt(pow(pcw, 2) + pow(pch, 2)));
+	const size_t pcw = static_cast<size_t>(static_cast<float>(pw) / cw);
+	const size_t pch = static_cast<size_t>(static_cast<float>(ph) / ch);
 
 	for (size_t cell_x = 0; cell_x < cw; ++cell_x)
 	{
@@ -115,23 +128,23 @@ void PerlinNoise::generate(Source &_source) const
 					Vector2f vector_to_top_right   { normed_point_x - 1.f, normed_point_y       };
 					Vector2f vector_to_bottom_left { normed_point_x      , normed_point_y - 1.f };
 					Vector2f vector_to_bottom_right{ normed_point_x - 1.f, normed_point_y - 1.f };
-
+					
+					/*
 					auto normalize_by_d = [](Vector2f &_v)
 					{
 						_v.x /= SQRT_2;
 						_v.y /= SQRT_2;
-
-						/*
+						
 						_v.x *= 2;
 						_v.y *= 2;
-						*/
-						
 					};
 
+				
 					normalize_by_d(vector_to_top_left);
 					normalize_by_d(vector_to_top_right);
 					normalize_by_d(vector_to_bottom_left);
 					normalize_by_d(vector_to_bottom_right);
+					*/
 
 					// Dot product.
 					const float top_left_value     = top_left_cell.x     * vector_to_top_left.x     + top_left_cell.y     * vector_to_top_left.y    ;

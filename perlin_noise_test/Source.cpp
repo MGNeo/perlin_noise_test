@@ -5,6 +5,13 @@
 
 using namespace std;
 
+const float MIN_SOURCE_VALUE = 0.f;
+const float MAX_SOURCE_VALUE = 1.f;
+
+const size_t MIN_SOURCE_WIDTH  = 1U;
+const size_t MIN_SOURCE_HEIGHT = 1U;
+
+
 Source::Source(const size_t _width,
 			   const size_t _height)
 {
@@ -15,14 +22,14 @@ Source::Source(const size_t _width,
 void Source::resize(const size_t _width,
 					const size_t _height)
 {
-	if (_width <= 1U)
+	if (_width <= MIN_SOURCE_WIDTH)
 	{
-		throw invalid_argument("Source::resize(), _width <= 1U");
+		throw invalid_argument("Source::resize(), _width <= MIN_SOURCE_WIDTH");
 	}
 
-	if (_height <= 1)
+	if (_height <= MIN_SOURCE_HEIGHT)
 	{
-		throw invalid_argument("Source::resize(), _height <= 1Ud");
+		throw invalid_argument("Source::resize(), _height <= MIN_SOURCE_HEIGHT");
 	}
 
 	// Exception safety.
@@ -93,14 +100,14 @@ void Source::setPoint(const size_t _x,
 		throw invalid_argument("Source::setPoint(), _y >= height");
 	}
 
-	if (_value < 0.f)
+	if (_value < MIN_SOURCE_VALUE)
 	{
-		throw invalid_argument("Source::setPoint(), _value < 0.f");
+		throw invalid_argument("Source::setPoint(), _value < MIN_SOURCE_VALUE");
 	}
 
-	if (_value >= 1.f)
+	if (_value > MAX_SOURCE_VALUE)
 	{
-		throw invalid_argument("Source::setPoint(), _value > 1.f");
+		throw invalid_argument("Source::setPoint(), _value > MAX_SOURCE_VALUE");
 	}
 
 	points[_x][_y] = _value;
