@@ -1,5 +1,9 @@
 #pragma once
 
+#include <vector>
+#include <initializer_list>
+#include <memory>
+
 class Source;
 
 class Filter
@@ -9,14 +13,31 @@ public:
 	virtual ~Filter();
 };
 
-class PosterizationFilter : public Filter
+class LinearPosterizationFilter : public Filter
 {
 public:
-	PosterizationFilter(const size_t _levels = 10U);
+	LinearPosterizationFilter(const size_t _levels = 10U);
 
 	void apply(Source &_source) const override;
 private:
 	size_t levels;
+};
+
+class CustomPosterizationFilter : public Filter
+{
+public:
+	CustomPosterizationFilter(std::initializer_list<float> _points);
+
+	void apply(Source &_source) const override;
+private:
+	size_t count;
+	std::unique_ptr<float[]> points;
+};
+
+class RangeCorrectionFilter : public Filter
+{
+public:
+	void apply(Source &_source) const override;
 };
 
 // Пороговый фильтр.

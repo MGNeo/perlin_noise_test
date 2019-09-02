@@ -22,10 +22,10 @@ public:
 	size_t getWidth() const;
 	size_t getHeight() const;
 
-	float getPoint(const size_t _x,
+	float getValue(const size_t _x,
 			       const size_t _y) const;
 
-	void setPoint(const size_t _x,
+	void setValue(const size_t _x,
 			      const size_t _y,
 			      const float _value);
 private:

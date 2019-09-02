@@ -70,44 +70,44 @@ size_t Source::getHeight() const
 	return height;
 }
 
-float Source::getPoint(const size_t _x,
+float Source::getValue(const size_t _x,
 				       const size_t _y) const
 {
 	if (_x >= width)
 	{
-		throw invalid_argument("Source::getPoint(), _x >= width");
+		throw invalid_argument("Source::getValue(), _x >= width");
 	}
 
 	if (_y >= height)
 	{
-		throw invalid_argument("Source::getPoint(), _y >= height");
+		throw invalid_argument("Source::getValue(), _y >= height");
 	}
 
 	return points[_x][_y];
 }
 
-void Source::setPoint(const size_t _x,
+void Source::setValue(const size_t _x,
 				      const size_t _y,
 				      const float _value)
 {
 	if (_x >= width)
 	{
-		throw invalid_argument("Source::setPoint(), _x >= width");
+		throw invalid_argument("Source::setValue(), _x >= width");
 	}
 
 	if (_y >= height)
 	{
-		throw invalid_argument("Source::setPoint(), _y >= height");
+		throw invalid_argument("Source::setValue(), _y >= height");
 	}
 
 	if (_value < MIN_SOURCE_VALUE)
 	{
-		throw invalid_argument("Source::setPoint(), _value < MIN_SOURCE_VALUE");
+		throw invalid_argument("Source::setValue(), _value < MIN_SOURCE_VALUE");
 	}
 
 	if (_value > MAX_SOURCE_VALUE)
 	{
-		throw invalid_argument("Source::setPoint(), _value > MAX_SOURCE_VALUE");
+		throw invalid_argument("Source::setValue(), _value > MAX_SOURCE_VALUE");
 	}
 
 	points[_x][_y] = _value;

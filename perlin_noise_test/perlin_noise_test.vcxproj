@@ -129,11 +129,13 @@
   <ItemGroup>
     <ClCompile Include="Filter.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Mixer.cpp" />
     <ClCompile Include="Noise.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Filter.hpp" />
+    <ClInclude Include="Mixer.hpp" />
     <ClInclude Include="Noise.hpp" />
     <ClInclude Include="Source.hpp" />
   </ItemGroup>

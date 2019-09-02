@@ -138,8 +138,7 @@ void PerlinNoise::generate(Source &_source) const
 						_v.x *= 2;
 						_v.y *= 2;
 					};
-
-				
+					
 					normalize_by_d(vector_to_top_left);
 					normalize_by_d(vector_to_top_right);
 					normalize_by_d(vector_to_bottom_left);
@@ -166,7 +165,7 @@ void PerlinNoise::generate(Source &_source) const
 					const float source_x = cell_x * pcw + point_x;
 					const float source_y = cell_y * pch + point_y;
 
-					_source.setPoint(source_x, source_y, value);
+					_source.setValue(source_x, source_y, value);
 				}
 			}
 
