@@ -59,8 +59,8 @@ int main(int argc, char **argv)
 				perlin_noise_3.reset();
 				perlin_noise_3.generate(source_3);
 
-				SimpleMixer simple_mixer_1{ 0.3f };
-				SimpleMixer simple_mixer_2{ 0.90f };
+				SimpleMixer simple_mixer_1{ 0.4f };
+				SimpleMixer simple_mixer_2{ 0.925f };
 
 				simple_mixer_1.mix(source_1, source_2, source_4);
 				simple_mixer_2.mix(source_3, source_4, source_5);
