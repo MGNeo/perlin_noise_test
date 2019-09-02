@@ -12,6 +12,8 @@ using namespace std;
 
 const size_t WINDOW_SIZE = 512U;
 
+// TODO: Fix all type conversions.
+
 int main(int argc, char **argv)
 {
 	RenderWindow render_window{ VideoMode(WINDOW_SIZE, WINDOW_SIZE), "Perlin Noise Test", Style::Close };
