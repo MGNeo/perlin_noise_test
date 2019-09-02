@@ -23,4 +23,3 @@ public:
 private:
 	const float k;
 };
-

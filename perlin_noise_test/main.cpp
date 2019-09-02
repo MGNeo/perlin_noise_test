@@ -12,7 +12,9 @@ using namespace std;
 
 const size_t WINDOW_SIZE = 512U;
 
+
 // TODO: Fix all type conversions.
+
 
 int main(int argc, char **argv)
 {
