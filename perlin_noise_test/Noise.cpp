@@ -129,22 +129,6 @@ void PerlinNoise::generate(Source& _source) const
           Vector2f vector_to_bottom_left { normed_point_x      , normed_point_y - 1.f };
           Vector2f vector_to_bottom_right{ normed_point_x - 1.f, normed_point_y - 1.f };
 
-          /*
-          auto normalize_by_d = [](Vector2f &_v)
-          {
-            _v.x /= SQRT_2;
-            _v.y /= SQRT_2;
-
-            _v.x *= 2;
-            _v.y *= 2;
-          };
-
-          normalize_by_d(vector_to_top_left);
-          normalize_by_d(vector_to_top_right);
-          normalize_by_d(vector_to_bottom_left);
-          normalize_by_d(vector_to_bottom_right);
-          */
-
           // Dot product.
           const float top_left_value     = top_left_cell.x     * vector_to_top_left.x     + top_left_cell.y     * vector_to_top_left.y;
           const float top_right_value    = top_right_cell.x    * vector_to_top_right.x    + top_right_cell.y    * vector_to_top_right.y;
@@ -162,8 +146,8 @@ void PerlinNoise::generate(Source& _source) const
 
           value = (1.f + value) / 2.f;
 
-          const float source_x = cell_x * k_width  + point_x;
-          const float source_y = cell_y * k_height + point_y;
+          const size_t source_x = cell_x * k_width  + point_x;
+          const size_t source_y = cell_y * k_height + point_y;
 
           _source.setValue(source_x, source_y, value);
         }

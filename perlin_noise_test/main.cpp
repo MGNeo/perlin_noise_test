@@ -30,7 +30,7 @@ int main(int argc, char** argv)
   PerlinNoise perlin_noise_2{ 16U, 16U, false };
   PerlinNoise perlin_noise_3{ 64U, 64U, false };
 
-  CustomPosterizationFilter custom_posterization_filter{ 0.1f, 0.2f, 0.3f, 0.5f, 0.80f, 1.f };
+  CustomPosterizationFilter custom_posterization_filter{ 0.1f, 0.2f, 0.4f, 0.7f, 0.9f, 1.f };
 
   Image image;
   image.create(source_5.getWidth(), source_5.getHeight(), Color::Black);
@@ -74,7 +74,7 @@ int main(int argc, char** argv)
         {
           for (size_t y = 0; y < image.getSize().y; ++y)
           {
-            const Uint8 brightness = 255 * source_5.getValue(x, y);
+            const Uint8 brightness = static_cast<Uint8>(255 * source_5.getValue(x, y));
             const Color color{ brightness, brightness, brightness, 255U };
             image.setPixel(x, y, color);
           }
